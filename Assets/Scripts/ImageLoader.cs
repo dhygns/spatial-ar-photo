@@ -10,8 +10,13 @@ using UnityEngine;
 
 public class ImageLoader : MonoBehaviour {
 
+
+
 	//Picture Canvas for rendering image
-	public GameObject PictureCanvasObject;
+	public Transform PictureRoot;
+	public GameObject PictureCanvasPrefab;
+
+	static public GameObject PictureCanvasObject;
 	private Material PictureCanvasImage;
 
 	private WWW fileReq;
@@ -26,12 +31,15 @@ public class ImageLoader : MonoBehaviour {
 	}
 
 	void Start() {
-		PictureCanvasImage = PictureCanvasObject.GetComponent<MeshRenderer>().material;
-		Debug.Log (PictureCanvasImage);
-
+//		PictureCanvasImage = PictureCanvasObject.GetComponent<MeshRenderer>().material;
+//		Debug.Log (PictureCanvasImage);
 	}
 
 	void Update() {
+		//For Debug
+		if (Input.GetKeyDown (KeyCode.Return)) {
+			SetImage (null);
+		}
 	}
 
 
@@ -74,10 +82,13 @@ public class ImageLoader : MonoBehaviour {
 	}
 
 	public void SetImage(Texture2D tex) {
-		PictureCanvasObject.transform.localScale = new Vector3 (1.0f, tex.width / tex.height, 0.1f);
-		Debug.Log (tex);
-		Debug.Log (PictureCanvasImage);
-		PictureCanvasImage.mainTexture = tex;
+		PictureCanvasObject = Instantiate (this.PictureCanvasPrefab, this.PictureRoot) as GameObject;
+		Debug.Log (PictureCanvasObject);
+		if (tex != null) {
+			PictureCanvasObject.GetComponent<MeshRenderer> ().material.mainTexture = tex;
+			PictureCanvasObject.transform.localScale = new Vector3 (0.1f, 0.01f, 0.1f * tex.width / tex.height);
+		}
+		PictureCanvasObject.transform.position = new Vector3 (Camera.main.transform.position.x, 0.0f, Camera.main.transform.position.z);
 	}
 
 	public void RunImagePicker() {
