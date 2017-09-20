@@ -54,7 +54,7 @@ public class ImageObjectController : MonoBehaviour {
 		this.actionPosition.z += (this.actionPositionTarget.z - this.actionPosition.z) * Time.deltaTime * 1.0f;
 
 		float dist = (this.actionPosition - this.actionPositionTarget).magnitude;
-		this.transform.Rotate (Vector3.up * dist * Time.deltaTime * 100.0f);
+		this.transform.Rotate (Vector3.up * dist * Time.deltaTime * 500.0f);
 //		if (dist < 0.001f)
 //			this.actionList = null;
 	}
