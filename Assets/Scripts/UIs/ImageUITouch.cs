@@ -32,6 +32,7 @@ public class ImageUITouch : MonoBehaviour {
 
 		//Update Delgate Functions
 		if(updateTickList != null) updateTickList(Time.deltaTime);
+
 	}
 
 	//Touch Management
@@ -49,8 +50,17 @@ public class ImageUITouch : MonoBehaviour {
 	//status for touch
 	private TouchStatus touchStatus;
 
+	//Touch Ray
+	private Ray touchRay;
+	private RaycastHit touchHit;
+
 
 	//FUNCTIONS ABOUT TICK 
+	void _pickObject(float dt) {
+		touchRay = Camera.main.ScreenPointToRay (this.pixelTouchingPosition);
+		Physics.Raycast (touchRay, out touchHit, 2.0f);
+	}
+
 	//set position for Touch
 	void updateTick(float dt) {
 		//will seperate down, move, up
@@ -109,6 +119,7 @@ public class ImageUITouch : MonoBehaviour {
 		_ToTick(ref pixelTouchDownPosition, ref normalTouchDownPosition, Input.GetTouch(0).position);
 		#endif
 		_updateMoveTick (dt);
+		_pickObject (dt);
 	}
 	void _updateUpTick(float dt) {
 		#if UNITY_EDITOR
@@ -189,6 +200,39 @@ public class ImageUITouch : MonoBehaviour {
 				return true;
 			else
 				return false;
+		}
+	}
+
+	//get Touching Position
+	static public Vector2 PixelPosition {
+		get { 
+			if (_instance.updateTickList == _instance._updateMoveTick ||
+			    _instance.updateTickList == _instance._updateDownTick) {
+				return _instance.pixelTouchingPosition; 
+			} else {
+				return _instance.pixelTouchUpPosition;
+			}
+		}
+	}
+	static public Vector2 NormalPosition {
+		get { 
+			if (_instance.updateTickList == _instance._updateMoveTick ||
+				_instance.updateTickList == _instance._updateDownTick) {
+				return _instance.normalTouchingPosition; 
+			} else {
+				return _instance.pixelTouchUpPosition;
+			}
+		}
+	}
+
+	//get Touched GameObject
+	static public GameObject HitObject {
+		get { 
+			if (_instance.touchHit.collider != null) {
+				return _instance.touchHit.collider.gameObject; 
+			} else {
+				return null;
+			}
 		}
 	}
 }

@@ -17,7 +17,6 @@ public class ImageUIWrapper : MonoBehaviour {
 	void Awake() {
 		rotation = new Vector3(0.0f, 0.0f, allRotationSteps[ID]);
 		lastRotationStep = rotation.z;
-		Debug.Log (rotation);
 	}
 
 	// Use this for initialization
@@ -66,6 +65,6 @@ public class ImageUIWrapper : MonoBehaviour {
 	}
 
 	public void Keep(float spdpertime, float dt) {
-		rotation.z += (lastRotationStep - rotation.z) * dt * 10.0f;
+		rotation.z += (lastRotationStep - rotation.z) * dt * 2.0f;
 	}
 }

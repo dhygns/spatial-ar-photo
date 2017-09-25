@@ -6,7 +6,6 @@ public class ImageUISlot : MonoBehaviour {
 
 
 	//imageWrapper Objects
-	public GameObject imageSlot;
 	public ImageUIWrapper[] imageWrapper;
 
 
@@ -20,7 +19,10 @@ public class ImageUISlot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		this.transform.parent = Camera.main.transform;
+		this.transform.localScale = Vector3.one;
+		this.transform.localEulerAngles = Vector3.zero;
+		this.transform.localPosition = new Vector3 (0.0f, 0.0f, 0.1f);
 	}
 	
 	// Update is called once per frame
@@ -106,13 +108,13 @@ public class ImageUISlot : MonoBehaviour {
 	//private clac 
 	private float prevx = 0.0f;
 	private float currx = 0.0f;
-	private Queue<float> speeds = new Queue<float> ();
+	private Queue<float> speedx = new Queue<float> ();
 
 	//init for claculating a SlotRotatingSpeed
 	private void clearCalcSlotRotateSpeed() {
 		prevx = 0.0f;
 		currx = 0.0f;
-		speeds.Clear ();
+		speedx.Clear ();
 	}
 
 	//calculating Slot Rotating Speed
@@ -120,12 +122,12 @@ public class ImageUISlot : MonoBehaviour {
 		float speed = 0.0f;
 		prevx = currx;
 		currx = ImageUITouch.ElaspedNormalPosition.x;
-		if (speeds.Count > 8)
-			speeds.Dequeue ();
-		speeds.Enqueue (currx - prevx);
+		if (speedx.Count > 8)
+			speedx.Dequeue ();
+		speedx.Enqueue (currx - prevx);
 
-		for(int i = 0 ; i < speeds.Count ; i ++) {
-			speed += speeds.ToArray () [i] / speeds.Count;
+		for(int i = 0 ; i < speedx.Count ; i ++) {
+			speed += speedx.ToArray () [i] / speedx.Count;
 		}
 		return speed * 10.0f;
 	}
@@ -133,7 +135,4 @@ public class ImageUISlot : MonoBehaviour {
 	private float calcSlotDeltaPosition() {
 		return (currx - prevx) * 10.0f;
 	}
-
-
-
 }
