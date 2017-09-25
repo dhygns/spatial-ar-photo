@@ -84,4 +84,9 @@ extern "C"
 
         }
     }
+
+    void RequestGalleryImage() {
+        printf("RequestGalleryImage\n");
+
+    }
 }

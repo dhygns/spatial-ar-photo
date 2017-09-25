@@ -28,6 +28,13 @@ public class ImageLoader : MonoBehaviour {
 
 	//
 	void Awake() {
+		// /private/var/mobile/Media/DCIM/
+//		DirectoryInfo root = new DirectoryInfo("/private/var/mobile/Media/DCIM");
+//		FileInfo[] infos = root.GetFiles ();
+//
+//		for (int i = 0; i < infos.Length; i++) {
+//			Debug.Log (infos [i]);
+//		}
 	}
 
 	void Start() {
@@ -72,7 +79,7 @@ public class ImageLoader : MonoBehaviour {
 	}
 
 	IEnumerator RequestImage(string path) {
-
+		Debug.Log (path);
 		fileReq = new WWW ("file://" + path);
 		while (!fileReq.isDone) {
 			Debug.Log ("RequestImage" + this);
@@ -81,14 +88,13 @@ public class ImageLoader : MonoBehaviour {
 		yield break;
 	}
 
+	//it need update for oop
 	public void SetImage(Texture2D tex) {
-		PictureCanvasObject = Instantiate (this.PictureCanvasPrefab, this.PictureRoot) as GameObject;
+		PictureCanvasObject = Instantiate (this.PictureCanvasPrefab, Camera.main.transform) as GameObject;
 		Debug.Log (PictureCanvasObject);
 		if (tex != null) {
 			PictureCanvasObject.GetComponent<MeshRenderer> ().material.mainTexture = tex;
-			PictureCanvasObject.transform.localScale = new Vector3 (0.1f, 0.01f, 0.1f * tex.width / tex.height);
 		}
-		PictureCanvasObject.transform.position = new Vector3 (Camera.main.transform.position.x, 0.0f, Camera.main.transform.position.z);
 	}
 
 	public void RunImagePicker() {

@@ -5,7 +5,6 @@ namespace UnityEngine.XR.iOS
 {
 	public class TouchHitManager : MonoBehaviour
 	{
-		public Transform ImageObjectPrarent;
 		public GameObject ImageObjectPrefab;
 
 		bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes)
@@ -26,7 +25,7 @@ namespace UnityEngine.XR.iOS
 		void Update () {
 			
 
-			if (Input.touchCount > 0 && ImageObjectPrarent != null)
+			if (Input.touchCount > 0)
 			{
 				var touch = Input.GetTouch(0);
 				if (touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Moved)
@@ -70,9 +69,8 @@ namespace UnityEngine.XR.iOS
 			GameObject image = ImageLoader.PictureCanvasObject;
 			if (image == null)
 				return;
-			Debug.Log (image);
+//			Debug.Log (image);
 			ImageObjectController imageController = image.GetComponent<ImageObjectController> ();
-			Debug.Log (imageController);
 			imageController.DoAction (target);
 		}
 	}
