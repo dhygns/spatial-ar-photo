@@ -8,7 +8,6 @@ public class ImageUISlot : MonoBehaviour {
 	//imageWrapper Objects
 	public ImageUIWrapper[] imageWrapper;
 
-
 	//imageWarpper Release Status
 	enum ReleasedStatus { Inertia, Default };
 	ReleasedStatus releasedStatus;
@@ -22,7 +21,7 @@ public class ImageUISlot : MonoBehaviour {
 		this.transform.parent = Camera.main.transform;
 		this.transform.localScale = Vector3.one;
 		this.transform.localEulerAngles = Vector3.zero;
-		this.transform.localPosition = new Vector3 (0.0f, 0.0f, 0.1f);
+		this.transform.localPosition = new Vector3 (0.0f,-0.1f, 0.1f);
 	}
 	
 	// Update is called once per frame
@@ -92,7 +91,8 @@ public class ImageUISlot : MonoBehaviour {
 
 	//Pick Logics
 	void updateImageWrapperPick(float dt) {
-		
+		foreach(ImageUIWrapper obj in imageWrapper) {
+		}
 	}
 
 	//Swipe Logics

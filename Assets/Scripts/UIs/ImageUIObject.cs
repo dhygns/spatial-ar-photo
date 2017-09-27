@@ -6,17 +6,21 @@ public class ImageUIObject : MonoBehaviour {
 
 	//Objects Common Root
 	private Transform objectRoot;
+	private Transform objectWrapper;
+
 	private Rigidbody objectRigidbody;
 
 
 	//Objects trasnforms
 	private Vector3 touch;
 	private Vector3 position;
+	private Vector3 rotation;
 	private Vector3 velocity;
 
 	void Awake() {
 		//Get Root Transform.
 		objectRoot = GameObject.Find ("ObjectRoot").transform;
+		objectWrapper = this.transform.parent;
 		objectRigidbody = this.GetComponent<Rigidbody> ();
 //		objectRigidbody.Sleep ();
 		motion = UIMotion;
@@ -42,7 +46,15 @@ public class ImageUIObject : MonoBehaviour {
 			motion = GrabMotion;
 		} 
 		position.Set (0.0f, 2.0f, 0.0f);
+
+		rotation = this.transform.localEulerAngles;
+		rotation.z = rotation.z > 180.0f ? rotation.z - 360.0f : rotation.z;
+		rotation.z += (0.0f - rotation.z) * dt * 10.0f;
+
 		this.transform.localPosition += (position - this.transform.localPosition) * dt * 10.0f;
+		this.transform.localEulerAngles = rotation;
+
+		objectWrapper = this.transform.parent;
 	}
 
 	void ReleaseMotion(float dt) {
@@ -50,14 +62,21 @@ public class ImageUIObject : MonoBehaviour {
 	}
 
 	void GrabMotion(float dt) {
+		const float limit = 0.2f;
 
 		if (ImageUITouch.Status == ImageUITouch.TouchStatus.idle) {
 			//need one more condition. (speed or area)
-			if (ImageUITouch.ElaspedNormalPosition.y > 0.2) {
+			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
 				this.transform.parent = objectRoot;
 				motion = ReleaseMotion;
 			} else {
 				motion = UIMotion;
+			}
+		} else {
+			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
+				this.transform.parent = objectRoot;
+			} else {
+				this.transform.parent = objectWrapper;
 			}
 		}
 

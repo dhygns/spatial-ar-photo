@@ -5,18 +5,35 @@ using UnityEngine;
 public class ImageUIWrapper : MonoBehaviour {
 	public int ID;
 
-	private float lastRotationStep = 0.0f;
-	private float[] allRotationSteps = new float[]{
-		-13.5f, -9.0f, -4.5f, 0.0f, 4.5f, 9.0f, 13.5f
-	};
-	private float sideLength = 27.0f;
+	//Side Wrapper
+	public Transform LeftWrapper;
+	public Transform RightWrapper;
+
+	//Image Object
+	private GameObject ImagePrefab;
+	public Transform ImageObject;
+
+//	private float lastRotationStep = 0.0f;
+//	private float[] allRotationSteps = new float[]{
+//		-13.5f, -9.0f, -4.5f, 0.0f, 4.5f, 9.0f, 13.5f
+//	};
+	private float minLimit = -13.5f;
+	private float maxLimit =  13.5f;
+	private float sideLength = 31.5f;
 	private float eachDistance = 4.5f;
 		
 	private Vector3 rotation = Vector3.zero;
+	private Vector3 rotationTarget = Vector3.zero;
+
+	private Vector3 position = new Vector3(0.0f, -2.5f, 1.0f);
 
 	void Awake() {
-		rotation = new Vector3(0.0f, 0.0f, allRotationSteps[ID]);
-		lastRotationStep = rotation.z;
+		ImagePrefab = Resources.Load ("HitCube") as GameObject;
+
+		rotationTarget = this.transform.localEulerAngles;
+		rotationTarget.z = rotationTarget.z > 180.0f ? rotationTarget.z - 360.0f : rotationTarget.z;
+
+//		lastRotationStep = rotation.z;
 	}
 
 	// Use this for initialization
@@ -26,45 +43,105 @@ public class ImageUIWrapper : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		position.y = -2.45f - Mathf.Abs(rotation.z) * 0.002f;
+		position.z =  1.0f + Mathf.Abs(rotation.z) * 0.004f;
+
+		rotation += (rotationTarget - rotation) * Time.deltaTime;
+
 		this.transform.localEulerAngles = rotation;
+		this.transform.localPosition = position;
+
+		watchPosition ();
+		watchChild ();
 	}
 
-	//Interface 
-
-	public void Move(float spdpertime) {
-		float prevz = rotation.z;
-		float currz = rotation.z -= spdpertime;
-
-		//Left Limit to Right
-		int s = 0, e = allRotationSteps.Length - 1;
-
-		//Checking Last Step
-		for (int i = 0; i < allRotationSteps.Length; i++) {
-			if (Mathf.Sign (allRotationSteps[i] - currz) != 
-				Mathf.Sign (allRotationSteps[i] - prevz)) {
-				int idx = i + (int)Mathf.Sign (-spdpertime);
-				if (idx == s - 1) 
-					lastRotationStep = allRotationSteps [s] - eachDistance;
-				else if (idx == e + 1)
-					lastRotationStep = allRotationSteps [e] + eachDistance;
-				else lastRotationStep = allRotationSteps [idx];
+	//Check that ImageObject is in this wrapper
+	void watchChild() {
+		if (this.transform.childCount == 0) {
+			if (ID == 0 || ID == 6) {
+				Instantiate (ImagePrefab, this.transform);
+			} else if (ID > 3) {
+				LeftWrapper.GetChild(0).parent = this.transform;
+			} else {
+				RightWrapper.GetChild(0).parent = this.transform;
+			}
+		} 
+		else if (this.transform.childCount == 2) {
+			if (ID == 0 || ID == 6) {
+				GameObject.Destroy(this.transform.GetChild (0).gameObject);
+			} else if (ID > 3) {
+				this.transform.GetChild(0).parent = LeftWrapper;
+			} else {
+				this.transform.GetChild(0).parent = RightWrapper;
 			}
 		}
+	}
 
-		if (currz < allRotationSteps[s] - eachDistance) {
-			lastRotationStep = allRotationSteps [e - 1];
-			rotation.z += sideLength + eachDistance;
+	private void watchPosition() {
+		
+		if (rotation.z > maxLimit + eachDistance * 0.5f) {
+			rotation.z -= sideLength;
+			rotationTarget.z -= sideLength;
 		}
 
-		//Right Limit to Left
-		if (currz > allRotationSteps[e] + eachDistance) {
-			lastRotationStep = allRotationSteps [s + 1];
-			rotation.z += -sideLength - eachDistance;
+		if (rotation.z < minLimit - eachDistance * 0.5f) {
+			rotation.z += sideLength;
+			rotationTarget.z += sideLength;
 		}
 
+		float targ = Mathf.Round (rotation.z / 4.5f);
+		ID = (int)(targ + 10) % 7;
+	}
+
+
+	//Interface 
+	private float keepSpeed = 0.0f;
+
+	public void Move(float spdpertime) {
+//		float prevz = rotation.z;
+//		float currz = rotation.z - spdpertime;
+
+		keepSpeed = spdpertime;
+		rotationTarget.z -= keepSpeed;
+
+//
+//		//limit indices
+//		int s = 0, e = allRotationSteps.Length - 1;
+//
+//		if (spdpertime > 0.0f) {
+//			float targ = Mathf.Floor (rotation.z / 4.5f);
+//			ID = (int)(targ + 10) % 7;
+//			lastRotationStep = targ * 4.5f;
+//			if (lastRotationStep < allRotationSteps [s]) {
+//				lastRotationStep = allRotationSteps [e];
+//				rotation.z += sideLength;
+//			}
+//		}
+//		else {
+//			float targ = Mathf.Ceil (rotation.z / 4.5f);
+//			ID = (int)(targ + 10) % 7;
+//			lastRotationStep = targ * 4.5f;
+//			if (lastRotationStep > allRotationSteps [e]) {
+//				lastRotationStep = allRotationSteps [s];
+//				rotation.z -= sideLength;
+//			}
+//		}
 	}
 
 	public void Keep(float spdpertime, float dt) {
-		rotation.z += (lastRotationStep - rotation.z) * dt * 2.0f;
+		
+		if (Mathf.Abs (spdpertime) < 0.1f) {
+			keepSpeed += (0.0f - keepSpeed) * dt * 2.0f;
+			rotationTarget.z -= keepSpeed;
+
+		} else {
+			keepSpeed = spdpertime;
+			rotationTarget.z -= keepSpeed;
+		}
+//		rotation.z += (lastRotationStep - rotation.z) * dt * 2.0f;
+	}
+
+	public void setRotationTarget(float z) {
+		rotationTarget.z = z;
 	}
 }
