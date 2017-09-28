@@ -23,7 +23,7 @@ public class ImageUIWrapper : MonoBehaviour {
 	private float eachDistance = 4.5f;
 		
 	private Vector3 rotation = Vector3.zero;
-	private Vector3 rotationTarget = Vector3.zero;
+	public Vector3 rotationTarget = Vector3.zero;
 
 	private Vector3 position = new Vector3(0.0f, -2.5f, 1.0f);
 
@@ -46,7 +46,7 @@ public class ImageUIWrapper : MonoBehaviour {
 		position.y = -2.45f - Mathf.Abs(rotation.z) * 0.002f;
 		position.z =  1.0f + Mathf.Abs(rotation.z) * 0.004f;
 
-		rotation += (rotationTarget - rotation) * Time.deltaTime;
+		rotation += (rotationTarget - rotation) * Time.deltaTime * 10.0f;
 
 		this.transform.localEulerAngles = rotation;
 		this.transform.localPosition = position;
@@ -60,19 +60,14 @@ public class ImageUIWrapper : MonoBehaviour {
 		if (this.transform.childCount == 0) {
 			if (ID == 0 || ID == 6) {
 				Instantiate (ImagePrefab, this.transform);
-			} else if (ID > 3) {
-				LeftWrapper.GetChild(0).parent = this.transform;
 			} else {
-				RightWrapper.GetChild(0).parent = this.transform;
+				RightWrapper.GetChild (0).parent = this.transform;
 			}
-		} 
-		else if (this.transform.childCount == 2) {
+		} else if (this.transform.childCount == 2) {
 			if (ID == 0 || ID == 6) {
-				GameObject.Destroy(this.transform.GetChild (0).gameObject);
-			} else if (ID > 3) {
-				this.transform.GetChild(0).parent = LeftWrapper;
+				GameObject.Destroy (this.transform.GetChild (0).gameObject);
 			} else {
-				this.transform.GetChild(0).parent = RightWrapper;
+				this.transform.GetChild (0).parent = RightWrapper;
 			}
 		}
 	}
@@ -131,7 +126,7 @@ public class ImageUIWrapper : MonoBehaviour {
 	public void Keep(float spdpertime, float dt) {
 		
 		if (Mathf.Abs (spdpertime) < 0.1f) {
-			keepSpeed += (0.0f - keepSpeed) * dt * 2.0f;
+			keepSpeed += (0.0f - keepSpeed) * dt * 10.0f;
 			rotationTarget.z -= keepSpeed;
 
 		} else {

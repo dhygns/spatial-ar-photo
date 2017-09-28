@@ -92,6 +92,7 @@ public class ImageUISlot : MonoBehaviour {
 	//Pick Logics
 	void updateImageWrapperPick(float dt) {
 		foreach(ImageUIWrapper obj in imageWrapper) {
+			
 		}
 	}
 
@@ -134,5 +135,29 @@ public class ImageUISlot : MonoBehaviour {
 
 	private float calcSlotDeltaPosition() {
 		return (currx - prevx) * 10.0f;
+	}
+
+
+	private bool isPicked = false;
+	public void PickUp() {
+		if (isPicked)
+			return;
+		isPicked = true;
+		foreach(ImageUIWrapper obj in imageWrapper) {
+			obj.rotationTarget.z -= 4.5f * 0.5f;
+		}
+	}
+
+	public void PickDown() {
+		if (!isPicked)
+			return;
+		isPicked = false;
+		foreach(ImageUIWrapper obj in imageWrapper) {
+			obj.rotationTarget.z += 4.5f * 0.5f;
+		}
+	}
+
+	public void PickInit() {
+		isPicked = false;
 	}
 }

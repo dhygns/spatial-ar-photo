@@ -5,6 +5,8 @@ using UnityEngine;
 public class ImageUIObject : MonoBehaviour {
 
 	//Objects Common Root
+	private ImageUISlot UISlot;
+
 	private Transform objectRoot;
 	private Transform objectWrapper;
 
@@ -19,6 +21,7 @@ public class ImageUIObject : MonoBehaviour {
 
 	void Awake() {
 		//Get Root Transform.
+		UISlot = GameObject.Find ("UISlot").GetComponent<ImageUISlot> ();
 		objectRoot = GameObject.Find ("ObjectRoot").transform;
 		objectWrapper = this.transform.parent;
 		objectRigidbody = this.GetComponent<Rigidbody> ();
@@ -72,11 +75,14 @@ public class ImageUIObject : MonoBehaviour {
 			} else {
 				motion = UIMotion;
 			}
+			UISlot.PickInit ();
 		} else {
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
 				this.transform.parent = objectRoot;
+				UISlot.PickUp ();
 			} else {
 				this.transform.parent = objectWrapper;
+				UISlot.PickDown ();
 			}
 		}
 
