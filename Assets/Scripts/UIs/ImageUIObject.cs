@@ -72,6 +72,7 @@ public class ImageUIObject : MonoBehaviour {
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
 				this.transform.parent = objectRoot;
 				motion = ReleaseMotion;
+				enableRigidBody ();
 			} else {
 				motion = UIMotion;
 			}
@@ -127,6 +128,18 @@ public class ImageUIObject : MonoBehaviour {
 
 	private Vector2 calcSlotDeltaPosition() {
 		return (curr - prev) * 10.0f;
+	}
+
+	//Enable Rigidbody
+	private void enableRigidBody() {
+		Vector2 dir = calcSlotRotateSpeed ();
+		GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
+		GetComponent<Rigidbody> ().useGravity = true;
+		GetComponent<Rigidbody> ().AddForce (
+			this.transform.up * dir.y * 10.0f + 
+			this.transform.right * dir.x * 10.0f+
+			this.transform.forward * 10.0f
+		);
 	}
 
 }
