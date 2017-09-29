@@ -137,8 +137,7 @@ public class ImageUIObject : MonoBehaviour {
 		GetComponent<Rigidbody> ().useGravity = true;
 		GetComponent<Rigidbody> ().AddForce (
 			this.transform.up * dir.y * 10.0f + 
-			this.transform.right * dir.x * 10.0f+
-			this.transform.forward * 10.0f
+			this.transform.right * dir.x * 10.0f
 		);
 	}
 

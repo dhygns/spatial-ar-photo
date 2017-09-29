@@ -64,7 +64,6 @@ public class ImageUITouch : MonoBehaviour {
 	//set position for Touch
 	void updateTick(float dt) {
 		//will seperate down, move, up
-		#if UNITY_EDITOR
 		if(Input.GetMouseButtonDown(0)) {
 			updateTickList = _updateDownTick;
 		} else if(Input.GetMouseButton(0)) {
@@ -74,9 +73,6 @@ public class ImageUITouch : MonoBehaviour {
 		} else {
 			updateTickList = null;
 		}
-		#elif UNITY_IPHONE
-
-		#endif
 	}
 
 	//set status for TouchStatus (swipe, pick, idle)
