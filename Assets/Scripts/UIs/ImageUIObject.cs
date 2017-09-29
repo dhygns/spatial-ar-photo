@@ -27,11 +27,16 @@ public class ImageUIObject : MonoBehaviour {
 		objectRigidbody = this.GetComponent<Rigidbody> ();
 //		objectRigidbody.Sleep ();
 		motion = UIMotion;
+
 	}
 
 	// Use this for initialization
 	void Start () {
-		
+		string idx = "dummy" + Random.Range (1, 6) + "";
+		float ratio = UISlot.imageDics [idx].width / UISlot.imageDics [idx].height;
+		Debug.Log (ratio);
+		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
+		this.GetComponent<MeshRenderer> ().material.mainTexture = UISlot.imageDics [idx]; 
 	}
 
 
@@ -116,7 +121,7 @@ public class ImageUIObject : MonoBehaviour {
 		Vector2 speed = Vector2.zero;
 		prev = curr;
 		curr = ImageUITouch.ElaspedNormalPosition;
-		if (spdq.Count > 8)
+		if (spdq.Count > 2)
 			spdq.Dequeue ();
 		spdq.Enqueue (curr - prev);
 
@@ -136,9 +141,11 @@ public class ImageUIObject : MonoBehaviour {
 		GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 		GetComponent<Rigidbody> ().useGravity = true;
 		GetComponent<Rigidbody> ().AddForce (
-			this.transform.up * dir.y * 10.0f + 
+			this.transform.up * dir.y * 30.0f + 
 			this.transform.right * dir.x * 10.0f
 		);
+
+		GetComponent<Rigidbody> ().AddTorque (Random.rotation.eulerAngles * 0.0005f);
 	}
 
 }

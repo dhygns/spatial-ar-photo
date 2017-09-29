@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageUISlot : MonoBehaviour {
-
+	//it would be private image list
+	public Dictionary<string, Texture2D> imageDics = new Dictionary<string, Texture2D>();
 
 	//imageWrapper Objects
 	public ImageUIWrapper[] imageWrapper;
@@ -16,12 +17,20 @@ public class ImageUISlot : MonoBehaviour {
 	delegate void UpdateImageWrapper(float dt);
 	UpdateImageWrapper updateImageWrapper;
 
+	void Awake() {
+		imageDics["dummy1"] = Resources.Load ("images/dummy1") as Texture2D;
+		imageDics["dummy2"] = Resources.Load ("images/dummy2") as Texture2D;
+		imageDics["dummy3"] = Resources.Load ("images/dummy3") as Texture2D;
+		imageDics["dummy4"] = Resources.Load ("images/dummy4") as Texture2D;
+		imageDics["dummy5"] = Resources.Load ("images/dummy5") as Texture2D;
+	}
+
 	// Use this for initialization
 	void Start () {
 		this.transform.parent = Camera.main.transform;
 		this.transform.localScale = Vector3.one;
 		this.transform.localEulerAngles = Vector3.zero;
-		this.transform.localPosition = new Vector3 (0.0f,-0.1f, 0.1f);
+		this.transform.localPosition = new Vector3 (0.0f,-0.02f, -0.03f);
 	}
 	
 	// Update is called once per frame
@@ -130,11 +139,11 @@ public class ImageUISlot : MonoBehaviour {
 		for(int i = 0 ; i < speedx.Count ; i ++) {
 			speed += speedx.ToArray () [i] / speedx.Count;
 		}
-		return speed * 10.0f;
+		return speed * 20.0f;
 	}
 
 	private float calcSlotDeltaPosition() {
-		return (currx - prevx) * 10.0f;
+		return (currx - prevx) * 20.0f;
 	}
 
 
