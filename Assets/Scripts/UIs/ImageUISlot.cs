@@ -27,10 +27,10 @@ public class ImageUISlot : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		this.transform.parent = Camera.main.transform;
+//		this.transform.parent = Camera.main.transform;
 		this.transform.localScale = Vector3.one;
 		this.transform.localEulerAngles = Vector3.zero;
-		this.transform.localPosition = new Vector3 (0.0f,-0.02f, -0.03f);
+		this.transform.localPosition = new Vector3 (0.0f,-0.04f, -0.03f);
 	}
 	
 	// Update is called once per frame

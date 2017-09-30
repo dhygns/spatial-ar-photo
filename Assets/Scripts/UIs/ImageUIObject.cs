@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageUIObject : MonoBehaviour {
-
-	//Objects Common Root
+	
+	private Camera UICamera;
 	private ImageUISlot UISlot;
 
+	private Transform objectSlot;
 	private Transform objectRoot;
 	private Transform objectWrapper;
 
@@ -21,6 +22,8 @@ public class ImageUIObject : MonoBehaviour {
 
 	void Awake() {
 		//Get Root Transform.
+		objectSlot = GameObject.Find("UISlot").transform;
+		UICamera = GameObject.Find ("UICamera").GetComponent<Camera>();
 		UISlot = GameObject.Find ("UISlot").GetComponent<ImageUISlot> ();
 		objectRoot = GameObject.Find ("ObjectRoot").transform;
 		objectWrapper = this.transform.parent;
@@ -34,7 +37,6 @@ public class ImageUIObject : MonoBehaviour {
 	void Start () {
 		string idx = "dummy" + Random.Range (1, 6) + "";
 		float ratio = UISlot.imageDics [idx].width / UISlot.imageDics [idx].height;
-		Debug.Log (ratio);
 		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
 		this.GetComponent<MeshRenderer> ().material.mainTexture = UISlot.imageDics [idx]; 
 	}
@@ -66,58 +68,68 @@ public class ImageUIObject : MonoBehaviour {
 	}
 
 	void ReleaseMotion(float dt) {
-
 	}
 
 	void GrabMotion(float dt) {
 		const float limit = 0.2f;
 
+		//calculating to get depth.
+		touch = UICamera.WorldToScreenPoint (this.transform.position);
+
+		//calculating to get position x, y.
+		touch.x = ImageUITouch.PixelPosition.x;
+		touch.y = ImageUITouch.PixelPosition.y;
+		position = UICamera.ScreenToWorldPoint (touch);
+
+		calcSlotRotateSpeed ();
 		if (ImageUITouch.Status == ImageUITouch.TouchStatus.idle) {
 			//need one more condition. (speed or area)
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
-				this.transform.parent = objectRoot;
-				motion = ReleaseMotion;
 				enableRigidBody ();
+				this.transform.parent = UICamera.transform;
+				Vector3 eular = this.transform.localEulerAngles;
+					
+				this.transform.parent = Camera.main.transform;
+				this.transform.localEulerAngles = eular;
+
+				this.transform.parent = objectRoot;
+				this.transform.position = Camera.main.ScreenToWorldPoint (touch);
+				motion = ReleaseMotion;
 			} else {
+				
 				motion = UIMotion;
 			}
 			UISlot.PickInit ();
 		} else {
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
-				this.transform.parent = objectRoot;
+				this.transform.parent = objectSlot;
 				UISlot.PickUp ();
 			} else {
 				this.transform.parent = objectWrapper;
 				UISlot.PickDown ();
 			}
+
+
+			//set position
+			this.transform.position += (position - this.transform.position) * dt * 20.0f;
 		}
-
-		//calculating to get depth.
-		touch = Camera.main.WorldToScreenPoint (this.transform.position);
-
-		//calculating to get position x, y.
-		touch.x = ImageUITouch.PixelPosition.x;
-		touch.y = ImageUITouch.PixelPosition.y;
-		position = Camera.main.ScreenToWorldPoint (touch);
-
-		//set position
-		this.transform.position += (position - this.transform.position) * dt * 20.0f;
 	}
 
 	//private clac 
 	private Vector2 prev = Vector2.zero;
 	private Vector2 curr = Vector2.zero;
 	private Queue<Vector2> spdq = new Queue<Vector2> ();
+	private Vector2 spdm = new Vector2();
 
 	//init for claculating a SlotRotatingSpeed
 	private void clearCalcSlotRotateSpeed() {
-		prev = Vector2.zero;
-		curr = Vector2.zero;
+		prev = ImageUITouch.ElaspedNormalPosition;
+		curr = ImageUITouch.ElaspedNormalPosition;
 		spdq.Clear ();
 	}
 
 	//calculating Slot Rotating Speed
-	private Vector2 calcSlotRotateSpeed() {
+	private void calcSlotRotateSpeed() {
 		Vector2 speed = Vector2.zero;
 		prev = curr;
 		curr = ImageUITouch.ElaspedNormalPosition;
@@ -128,7 +140,7 @@ public class ImageUIObject : MonoBehaviour {
 		for(int i = 0 ; i < spdq.Count ; i ++) {
 			speed += spdq.ToArray () [i] / spdq.Count;
 		}
-		return speed * 10.0f;
+		spdm = speed * 10.0f;
 	}
 
 	private Vector2 calcSlotDeltaPosition() {
@@ -137,11 +149,12 @@ public class ImageUIObject : MonoBehaviour {
 
 	//Enable Rigidbody
 	private void enableRigidBody() {
-		Vector2 dir = calcSlotRotateSpeed ();
+		Vector2 dir = spdm;
+		dir.y = Mathf.Min (0.5f, dir.y);
 		GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
 		GetComponent<Rigidbody> ().useGravity = true;
 		GetComponent<Rigidbody> ().AddForce (
-			this.transform.up * dir.y * 30.0f + 
+			this.transform.up * dir.y * 300.0f + 
 			this.transform.right * dir.x * 10.0f
 		);
 

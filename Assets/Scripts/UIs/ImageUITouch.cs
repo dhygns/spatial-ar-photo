@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageUITouch : MonoBehaviour {
+	public Camera UICamera;
 
 	//UI Touch Status
 	public enum TouchStatus { swipe, pick, idle } 
@@ -57,7 +58,7 @@ public class ImageUITouch : MonoBehaviour {
 
 	//FUNCTIONS ABOUT TICK 
 	void _pickObject(float dt) {
-		touchRay = Camera.main.ScreenPointToRay (this.pixelTouchingPosition);
+		touchRay = UICamera.ScreenPointToRay (this.pixelTouchingPosition);
 		Physics.Raycast (touchRay, out touchHit, 2.0f);
 	}
 
