@@ -85,7 +85,6 @@ public class ImageUIObject : MonoBehaviour {
 		if (ImageUITouch.Status == ImageUITouch.TouchStatus.idle) {
 			//need one more condition. (speed or area)
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
-				enableRigidBody ();
 				this.transform.parent = UICamera.transform;
 				Vector3 eular = this.transform.localEulerAngles;
 					
@@ -94,6 +93,8 @@ public class ImageUIObject : MonoBehaviour {
 
 				this.transform.parent = objectRoot;
 				this.transform.position = Camera.main.ScreenToWorldPoint (touch);
+
+				enableRigidBody ();
 				motion = ReleaseMotion;
 			} else {
 				
@@ -133,7 +134,7 @@ public class ImageUIObject : MonoBehaviour {
 		Vector2 speed = Vector2.zero;
 		prev = curr;
 		curr = ImageUITouch.ElaspedNormalPosition;
-		if (spdq.Count > 2)
+		if (spdq.Count > 4)
 			spdq.Dequeue ();
 		spdq.Enqueue (curr - prev);
 
