@@ -26,6 +26,19 @@ public class ImageLoader : MonoBehaviour {
 	[DllImport("__Internal")]
 	private extern static void RequestCameraImage ();
 
+	Texture texture;
+
+	IEnumerator WaitForRequest(WWW www) {
+		yield return www;
+
+		if (www.error == null) {
+			Debug.Log ("TEXTURE LOAD SUCCEED");
+			texture = www.textureNonReadable;
+		} else {
+			Debug.Log ("TEXTURE LOAD FAILED");
+			Debug.Log (www.error.ToString());
+		}
+	}
 	//
 	void Awake() {
 		// /private/var/mobile/Media/DCIM/
@@ -35,6 +48,28 @@ public class ImageLoader : MonoBehaviour {
 //		for (int i = 0; i < infos.Length; i++) {
 //			Debug.Log (infos [i]);
 //		}
+		Debug.Log("=================XXXXXX===========================");
+		DirectoryInfo info = new DirectoryInfo(Application.persistentDataPath);
+		Debug.Log (info.Name);
+		FileInfo[] files = info.GetFiles ("*.*");
+		foreach (FileInfo file in files) {
+			Debug.Log (file.Name);
+			WWW www = new WWW(Application.persistentDataPath + file.Name);
+			if (www.error == null) {
+				texture = www.textureNonReadable;
+				Debug.Log ("TEXTURE LOAD SUCCEED" + texture);
+			} else {
+				Debug.Log ("TEXTURE LOAD FAILED");
+				Debug.Log (www.error.ToString());
+			}
+//			StartCoroutine(WaitForRequest(www));
+		}
+		DirectoryInfo[] dirs = info.GetDirectories ();
+		foreach (DirectoryInfo dir in dirs) {
+			Debug.Log (dir.Name);
+		}
+		Debug.Log("=================XXXXXX===========================");
+
 	}
 
 	void Start() {

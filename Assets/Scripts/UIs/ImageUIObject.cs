@@ -141,25 +141,31 @@ public class ImageUIObject : MonoBehaviour {
 		for(int i = 0 ; i < spdq.Count ; i ++) {
 			speed += spdq.ToArray () [i] / spdq.Count;
 		}
-		spdm = speed * 10.0f;
+		spdm = speed * 5.0f;
 	}
 
 	private Vector2 calcSlotDeltaPosition() {
-		return (curr - prev) * 10.0f;
+		return (curr - prev) * 5.0f;
 	}
 
 	//Enable Rigidbody
 	private void enableRigidBody() {
 		Vector2 dir = spdm;
-		dir.y = Mathf.Min (0.5f, dir.y);
-		GetComponent<Rigidbody> ().constraints = RigidbodyConstraints.None;
-		GetComponent<Rigidbody> ().useGravity = true;
-		GetComponent<Rigidbody> ().AddForce (
-			this.transform.up * dir.y * 300.0f + 
-			this.transform.right * dir.x * 10.0f
-		);
+		Vector3 rot = Random.rotation.eulerAngles * 0.00005f;
+		Rigidbody rigidbody = GetComponent<Rigidbody> ();
+		float mas = rigidbody.mass;
 
-		GetComponent<Rigidbody> ().AddTorque (Random.rotation.eulerAngles * 0.0005f);
+
+		dir.y = Mathf.Min (0.7f, dir.y);
+		rot *= mas; rot.y = 0.0f; rot.x = 0.0f;
+
+		rigidbody.constraints = RigidbodyConstraints.None;
+		rigidbody.useGravity = true;
+		rigidbody.AddForce (
+			this.transform.up * dir.y * 300.0f * mas + 
+			this.transform.right * dir.x * 10.0f * mas
+		);
+		rigidbody.AddTorque (rot);
 	}
 
 }
