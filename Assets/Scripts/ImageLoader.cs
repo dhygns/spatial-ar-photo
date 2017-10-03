@@ -26,6 +26,7 @@ public class ImageLoader : MonoBehaviour {
 	[DllImport("__Internal")]
 	private extern static void RequestCameraImage ();
 
+	public GameObject Target;
 	Texture texture;
 
 	IEnumerator WaitForRequest(WWW www) {
@@ -33,7 +34,7 @@ public class ImageLoader : MonoBehaviour {
 
 		if (www.error == null) {
 			Debug.Log ("TEXTURE LOAD SUCCEED");
-			texture = www.textureNonReadable;
+			Target.GetComponent<Renderer>().material.mainTexture = www.textureNonReadable;
 		} else {
 			Debug.Log ("TEXTURE LOAD FAILED");
 			Debug.Log (www.error.ToString());
@@ -55,14 +56,7 @@ public class ImageLoader : MonoBehaviour {
 		foreach (FileInfo file in files) {
 			Debug.Log (file.Name);
 			WWW www = new WWW(Application.persistentDataPath + file.Name);
-			if (www.error == null) {
-				texture = www.textureNonReadable;
-				Debug.Log ("TEXTURE LOAD SUCCEED" + texture);
-			} else {
-				Debug.Log ("TEXTURE LOAD FAILED");
-				Debug.Log (www.error.ToString());
-			}
-//			StartCoroutine(WaitForRequest(www));
+			StartCoroutine(WaitForRequest(www));
 		}
 		DirectoryInfo[] dirs = info.GetDirectories ();
 		foreach (DirectoryInfo dir in dirs) {
