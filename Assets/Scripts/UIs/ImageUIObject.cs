@@ -19,15 +19,19 @@ public class ImageUIObject : MonoBehaviour {
 	private Vector3 position;
 	private Vector3 rotation;
 	private Vector3 velocity;
+	private Vector3 scale;
 
 	void Awake() {
 		//Get Root Transform.
 		objectSlot = GameObject.Find("UISlot").transform;
 		UICamera = GameObject.Find ("UICamera").GetComponent<Camera>();
+
 		UISlot = GameObject.Find ("UISlot").GetComponent<ImageUISlot> ();
 		objectRoot = GameObject.Find ("ObjectRoot").transform;
 		objectWrapper = this.transform.parent;
 		objectRigidbody = this.GetComponent<Rigidbody> ();
+
+		scale = this.transform.localScale;
 //		objectRigidbody.Sleep ();
 		motion = UIMotion;
 
@@ -68,6 +72,19 @@ public class ImageUIObject : MonoBehaviour {
 	}
 
 	void ReleaseMotion(float dt) {
+		//it was supposed to check
+		if (ImageUITouch.HitObject == this.gameObject) {
+			if (ImageUITouch.Force < 5.0f) {
+				scale.z = 0.03f / Mathf.Max(0.1f, ImageUITouch.Force);
+				Debug.Log (scale.z);
+			} else {
+				
+			}
+		} else {
+			scale.z = 0.03f;
+		}
+
+		this.transform.localScale += (scale - this.transform.localScale) * dt * 10.0f;
 	}
 
 	void GrabMotion(float dt) {

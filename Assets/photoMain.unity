@@ -151,7 +151,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 50159464}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0fcd2f9ae0fb41c9948b53c338cdc2a, type: 3}
   m_Name: 
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 50159464}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49ca8494a8b294ce3bc79c59f76984b8, type: 3}
   m_Name: 
@@ -295,7 +295,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &409385131
 Transform:
   m_ObjectHideFlags: 0
@@ -872,13 +872,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 783868415}
-  m_LocalRotation: {x: 0.25059575, y: -0.052938394, z: 0.013725303, w: 0.9665459}
-  m_LocalPosition: {x: 0.58, y: 1.36, z: -1.11}
+  m_LocalRotation: {x: 0.49371266, y: -0.045719504, z: 0.026003962, w: 0.86803305}
+  m_LocalPosition: {x: 0.58, y: 0.36, z: -1.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 409385131}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 29.07, y: -6.27, z: 0}
+  m_LocalEulerAnglesHint: {x: 59.26, y: -6.03, z: 0}
 --- !u!81 &783868417
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1091,7 +1091,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &869318309
 Transform:
   m_ObjectHideFlags: 0
@@ -1512,7 +1512,7 @@ Transform:
   m_GameObject: {fileID: 1529828093}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.294027, y: 0.2940269, z: 0.2940269}
   m_Children:
   - {fileID: 383977728}
   m_Father: {fileID: 1793347987}
@@ -1557,17 +1557,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114309886309445704, guid: 05e517bfc7cb14f418d08fe6e49afa75,
-        type: 2}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 593779017}
-    - target: {fileID: 114049584475664570, guid: 05e517bfc7cb14f418d08fe6e49afa75,
+    - target: {fileID: 114804311542520904, guid: 05e517bfc7cb14f418d08fe6e49afa75,
         type: 2}
       propertyPath: m_HitTransform
       value: 
       objectReference: {fileID: 1529828094}
-    - target: {fileID: 114804311542520904, guid: 05e517bfc7cb14f418d08fe6e49afa75,
+    - target: {fileID: 114049584475664570, guid: 05e517bfc7cb14f418d08fe6e49afa75,
         type: 2}
       propertyPath: m_HitTransform
       value: 

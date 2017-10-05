@@ -38,20 +38,21 @@ public class ImageUISlot : MonoBehaviour {
 
 		//Sperator Event
 		if (ImageUITouch.isPreased == true) {
-			//
-			switch (ImageUITouch.Status) {
-			case ImageUITouch.TouchStatus.idle: 
-				updateImageWrapper = updateImageWrapperGrap;
-				break;
-			case ImageUITouch.TouchStatus.pick:
-				updateImageWrapper = updateImageWrapperPick;
-				break;
-			case ImageUITouch.TouchStatus.swipe:
-				updateImageWrapper = updateImageWrapperSwipe;
-				break;
-			default :
-				Debug.LogWarning ("Unknown Touch Status");
-				break;
+			if(ImageUITouch.NormalDownPosition.y < 0.2){
+				switch (ImageUITouch.Status) {
+				case ImageUITouch.TouchStatus.idle: 
+					updateImageWrapper = updateImageWrapperGrap;
+					break;
+				case ImageUITouch.TouchStatus.pick:
+					updateImageWrapper = updateImageWrapperPick;
+					break;
+				case ImageUITouch.TouchStatus.swipe:
+					updateImageWrapper = updateImageWrapperSwipe;
+					break;
+				default :
+					Debug.LogWarning ("Unknown Touch Status");
+					break;
+				}
 			}
 		} else {
 			updateImageWrapper = updateImageWrapperReleased;

@@ -70,8 +70,8 @@ namespace UnityEngine.XR.iOS
 			if (image == null)
 				return;
 //			Debug.Log (image);
-			ImageObjectController imageController = image.GetComponent<ImageObjectController> ();
-			imageController.DoAction (target);
+//			ImageObjectController imageController = image.GetComponent<ImageObjectController> ();
+//			imageController.DoAction (target);
 		}
 	}
 

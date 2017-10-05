@@ -31,6 +31,8 @@ public class ImageUITouch : MonoBehaviour {
 		updateTick(Time.deltaTime);
 		updateStatus (Time.deltaTime);
 
+
+
 		//Update Delgate Functions
 		if(updateTickList != null) updateTickList(Time.deltaTime);
 
@@ -57,9 +59,16 @@ public class ImageUITouch : MonoBehaviour {
 
 
 	//FUNCTIONS ABOUT TICK 
+
+	//get picked object
 	void _pickObject(float dt) {
 		touchRay = UICamera.ScreenPointToRay (this.pixelTouchingPosition);
-		Physics.Raycast (touchRay, out touchHit, 2.0f);
+		Physics.Raycast (touchRay, out touchHit);
+
+		if (touchHit.collider == null) {
+			touchRay = Camera.main.ScreenPointToRay (this.pixelTouchingPosition);
+			Physics.Raycast (touchRay, out touchHit);
+		}
 	}
 
 	//set position for Touch
@@ -124,6 +133,7 @@ public class ImageUITouch : MonoBehaviour {
 		#elif UNITY_IPHONE 
 		_ToTick(ref pixelTouchUpPosition, ref normalTouchUpPosition, Input.GetTouch(0).position);
 		#endif
+		_instance.touchHit = new RaycastHit ();
 	}
 	void _updateMoveTick(float dt) {
 		#if UNITY_EDITOR
@@ -211,6 +221,7 @@ public class ImageUITouch : MonoBehaviour {
 			}
 		}
 	}
+
 	static public Vector2 NormalPosition {
 		get { 
 			if (_instance.updateTickList == _instance._updateMoveTick ||
@@ -222,6 +233,28 @@ public class ImageUITouch : MonoBehaviour {
 		}
 	}
 
+	static public Vector2 PixelDownPosition {
+		get {
+			if (_instance.updateTickList == _instance._updateMoveTick ||
+				_instance.updateTickList == _instance._updateDownTick) {
+				return _instance.pixelTouchDownPosition; 
+			} else {
+				return Vector2.zero;
+			}
+		}
+	}
+
+	static public Vector2 NormalDownPosition {
+		get {
+			if (_instance.updateTickList == _instance._updateMoveTick ||
+				_instance.updateTickList == _instance._updateDownTick) {
+				return _instance.normalTouchDownPosition; 
+			} else {
+				return Vector2.zero;
+			}
+		}
+	}		
+
 	//get Touched GameObject
 	static public GameObject HitObject {
 		get { 
@@ -230,6 +263,17 @@ public class ImageUITouch : MonoBehaviour {
 			} else {
 				return null;
 			}
+		}
+	}
+
+
+
+	static public float Force {
+		get { 
+			if (Input.touchCount != 0)
+				return Input.GetTouch (0).GetForce ();
+			else
+				return 0.0f;
 		}
 	}
 }
