@@ -21,6 +21,11 @@ public class ImageUIObject : MonoBehaviour {
 	private Vector3 velocity;
 	private Vector3 scale;
 
+
+	//UI Moition Updator Manager
+	delegate void UpdateMotion (float dt);
+	UpdateMotion updateMotion;
+
 	void Awake() {
 		//Get Root Transform.
 		objectSlot = GameObject.Find("UISlot").transform;
@@ -33,7 +38,7 @@ public class ImageUIObject : MonoBehaviour {
 
 		scale = this.transform.localScale;
 //		objectRigidbody.Sleep ();
-		motion = UIMotion;
+		updateMotion = updateUIMotion;
 
 	}
 
@@ -46,53 +51,70 @@ public class ImageUIObject : MonoBehaviour {
 	}
 
 
-	delegate void Motion (float dt);
-	Motion motion;
-
 	// Update is called once per frame
 	void Update () {
-		if(motion != null) motion (Time.deltaTime);
+		if(updateMotion != null) updateMotion (Time.deltaTime);
 	}
 
-	void UIMotion(float dt) {
+
+
+	// update Function for UI MODE
+	void updateUIMotion(float dt) {
 		if (ImageUITouch.Status == ImageUITouch.TouchStatus.pick &&
 			ImageUITouch.HitObject == this.gameObject) {
-			motion = GrabMotion;
+			updateMotion = updateGrabMotion;
 		} 
-		position.Set (0.0f, 2.0f, 0.0f);
 
-		rotation = this.transform.localEulerAngles;
+		position.Set (0.0f, 2.0f, 0.0f);
+		rotation.Set (0.0f, 0.0f, 0.0f);
+
 		rotation.z = rotation.z > 180.0f ? rotation.z - 360.0f : rotation.z;
 		rotation.z += (0.0f - rotation.z) * dt * 10.0f;
 
 		this.transform.localPosition += (position - this.transform.localPosition) * dt * 10.0f;
 		this.transform.localEulerAngles = rotation;
+		this.transform.localScale += (scale - this.transform.localScale) * dt * 10.0f;
 
 		objectWrapper = this.transform.parent;
 	}
 
-	void ReleaseMotion(float dt) {
+	//update Function for Released MODE
+	void updateReleaseMotion(float dt) {
 		//it was supposed to check
 		if (ImageUITouch.HitObject == this.gameObject) {
+			#if UNITY_EDITOR
+			attachToUI();
+			scale.x = 0.15f;
+			scale.y = 0.19f;
+			scale.z = 0.03f;
+
+			#elif UNITY_IPHONE
 			if (ImageUITouch.Force < 5.0f) {
-				scale.z = 0.03f / Mathf.Max(0.1f, ImageUITouch.Force);
-				Debug.Log (scale.z);
+				scale.x = 0.15f * Mathf.Max(1.0f, ImageUITouch.Force) * 0.5f;
+				scale.y = 0.19f * Mathf.Max(1.0f, ImageUITouch.Force) * 0.5f;
+				scale.z = 0.03f;
 			} else {
-				
+				attachToUI();
+				scale.x = 0.15f;
+				scale.y = 0.19f;
+				scale.z = 0.03f;
 			}
+			#endif
 		} else {
+			scale.x = 0.15f;
+			scale.y = 0.19f;
 			scale.z = 0.03f;
 		}
 
 		this.transform.localScale += (scale - this.transform.localScale) * dt * 10.0f;
 	}
 
-	void GrabMotion(float dt) {
+	//update Function for Grabed MODE
+	void updateGrabMotion(float dt) {
 		const float limit = 0.2f;
 
 		//calculating to get depth.
 		touch = UICamera.WorldToScreenPoint (this.transform.position);
-
 		//calculating to get position x, y.
 		touch.x = ImageUITouch.PixelPosition.x;
 		touch.y = ImageUITouch.PixelPosition.y;
@@ -102,20 +124,11 @@ public class ImageUIObject : MonoBehaviour {
 		if (ImageUITouch.Status == ImageUITouch.TouchStatus.idle) {
 			//need one more condition. (speed or area)
 			if (ImageUITouch.ElaspedNormalPosition.y > limit) {
-				this.transform.parent = UICamera.transform;
-				Vector3 eular = this.transform.localEulerAngles;
-					
-				this.transform.parent = Camera.main.transform;
-				this.transform.localEulerAngles = eular;
-
-				this.transform.parent = objectRoot;
-				this.transform.position = Camera.main.ScreenToWorldPoint (touch);
-
-				enableRigidBody ();
-				motion = ReleaseMotion;
+				attachToWorld ();
+				updateMotion = updateReleaseMotion;
 			} else {
 				
-				motion = UIMotion;
+				updateMotion = updateUIMotion;
 			}
 			UISlot.PickInit ();
 		} else {
@@ -165,6 +178,37 @@ public class ImageUIObject : MonoBehaviour {
 		return (curr - prev) * 5.0f;
 	}
 
+
+	//change parent 
+	private void attachToUI() {
+		objectWrapper = UISlot.GetCurrentCenterWrapper ();
+
+		this.transform.parent = Camera.main.transform;
+		position = this.transform.localPosition;
+
+		this.transform.parent = UICamera.transform;
+		this.transform.localPosition = position;
+
+		this.transform.parent = objectWrapper;
+		updateMotion = updateUIMotion;
+
+		disableRigidBody();
+	}
+
+	private void attachToWorld() {
+		this.transform.parent = UICamera.transform;
+		Vector3 eular = this.transform.localEulerAngles;
+
+		this.transform.parent = Camera.main.transform;
+		this.transform.localEulerAngles = eular;
+
+		this.transform.parent = objectRoot;
+		this.transform.position = Camera.main.ScreenToWorldPoint (touch);
+
+		enableRigidBody ();
+	}
+		
+
 	//Enable Rigidbody
 	private void enableRigidBody() {
 		Vector2 dir = spdm;
@@ -185,4 +229,12 @@ public class ImageUIObject : MonoBehaviour {
 		rigidbody.AddTorque (rot);
 	}
 
+
+	//Disable Rigidbody
+	private void disableRigidBody() {
+		Rigidbody rigidbody = GetComponent<Rigidbody> ();
+		rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+		rigidbody.useGravity = false;
+
+	}
 }

@@ -170,4 +170,13 @@ public class ImageUISlot : MonoBehaviour {
 	public void PickInit() {
 		isPicked = false;
 	}
+
+	public Transform GetCurrentCenterWrapper() {
+		Transform wrapper = null;
+		foreach(ImageUIWrapper obj in imageWrapper) {
+			if (obj.ID == 3 || obj.ID == 4)
+				wrapper = obj.gameObject.transform;
+		}
+		return wrapper;
+	}
 }

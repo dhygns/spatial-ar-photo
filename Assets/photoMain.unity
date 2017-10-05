@@ -116,8 +116,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 50159465}
-  - component: {fileID: 50159466}
-  - component: {fileID: 50159467}
   - component: {fileID: 50159469}
   m_Layer: 0
   m_Name: _Scripts
@@ -145,34 +143,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &50159466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 50159464}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0fcd2f9ae0fb41c9948b53c338cdc2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PictureRoot: {fileID: 1529828094}
-  PictureCanvasPrefab: {fileID: 1133438973845290, guid: 05e517bfc7cb14f418d08fe6e49afa75,
-    type: 2}
-  Target: {fileID: 1701756171}
---- !u!114 &50159467
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 50159464}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49ca8494a8b294ce3bc79c59f76984b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ImageObjectPrefab: {fileID: 1133438973845290, guid: 05e517bfc7cb14f418d08fe6e49afa75,
-    type: 2}
 --- !u!114 &50159469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &409385131
 Transform:
   m_ObjectHideFlags: 0
@@ -370,11 +340,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4023412880410692, guid: 696855730620a483c9ae4c242e312b28, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -0.173
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4023412880410692, guid: 696855730620a483c9ae4c242e312b28, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 1.058
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4023412880410692, guid: 696855730620a483c9ae4c242e312b28, type: 2}
       propertyPath: m_LocalRotation.x
@@ -1091,7 +1061,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &869318309
 Transform:
   m_ObjectHideFlags: 0
@@ -1145,7 +1115,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114804311542520904, guid: 05e517bfc7cb14f418d08fe6e49afa75, type: 2}
+    - {fileID: 114049584475664570, guid: 05e517bfc7cb14f418d08fe6e49afa75, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 05e517bfc7cb14f418d08fe6e49afa75, type: 2}
   m_IsPrefabParent: 0
 --- !u!4 &979394677 stripped
@@ -1697,7 +1669,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 50159466}
+      - m_Target: {fileID: 0}
         m_MethodName: RunImagePicker
         m_Mode: 1
         m_Arguments:

@@ -62,9 +62,11 @@ public class ImageUITouch : MonoBehaviour {
 
 	//get picked object
 	void _pickObject(float dt) {
+		//UI Object Picked
 		touchRay = UICamera.ScreenPointToRay (this.pixelTouchingPosition);
 		Physics.Raycast (touchRay, out touchHit);
 
+		//World Object Picked
 		if (touchHit.collider == null) {
 			touchRay = Camera.main.ScreenPointToRay (this.pixelTouchingPosition);
 			Physics.Raycast (touchRay, out touchHit);
