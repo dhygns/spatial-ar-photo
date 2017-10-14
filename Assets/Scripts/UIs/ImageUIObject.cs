@@ -11,9 +11,6 @@ public class ImageUIObject : MonoBehaviour {
 	private Transform objectRoot;
 	private Transform objectWrapper;
 
-	private Rigidbody objectRigidbody;
-
-
 	//Objects trasnforms
 	private Vector3 touch;
 	private Vector3 position;
@@ -34,7 +31,6 @@ public class ImageUIObject : MonoBehaviour {
 		UISlot = GameObject.Find ("UISlot").GetComponent<ImageUISlot> ();
 		objectRoot = GameObject.Find ("ObjectRoot").transform;
 		objectWrapper = this.transform.parent;
-		objectRigidbody = this.GetComponent<Rigidbody> ();
 
 		scale = this.transform.localScale;
 //		objectRigidbody.Sleep ();

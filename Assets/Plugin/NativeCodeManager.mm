@@ -31,9 +31,8 @@ static NativeCodeManager *_instance = [NativeCodeManager sharedInstance];
 
 - (void) dealloc
 {
-    // [imagePicker release];
-    // imagePicker = nil;
-    // [super dealloc];
+//     self.imagePicker = nil;
+//     [super dealloc];
 }
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *) info {
@@ -66,6 +65,8 @@ static NativeCodeManager *_instance = [NativeCodeManager sharedInstance];
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *) picker {
     [UnityGetGLViewController() dismissViewControllerAnimated:YES completion:NULL];
 }
+
+
 @end
 
 extern "C" 
@@ -83,10 +84,5 @@ extern "C"
             printf("isSource NOT here");
 
         }
-    }
-
-    void RequestGalleryImage() {
-        printf("RequestGalleryImage\n");
-
     }
 }
