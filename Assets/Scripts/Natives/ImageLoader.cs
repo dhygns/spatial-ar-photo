@@ -24,7 +24,7 @@ public class ImageLoader : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		#if UNITY_EDITOR
-		ImagesLoad ("assets-library://asset/asset.jpeg?id=582F0DEA-3355-47C0-BA32-FCBC4F0828A0&ext=jpeg");
+//		ImagesLoad ("assets-library://asset/asset.jpeg?id=582F0DEA-3355-47C0-BA32-FCBC4F0828A0&ext=jpeg");
 		#elif UNITY_IPHONE
 		_RequestGalleryImage ();
 		#endif
