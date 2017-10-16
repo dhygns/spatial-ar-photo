@@ -40,10 +40,6 @@ public class ImageUIObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		string idx = "dummy" + Random.Range (1, 6) + "";
-		float ratio = UISlot.imageDics [idx].width / UISlot.imageDics [idx].height;
-		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
-		this.GetComponent<MeshRenderer> ().material.mainTexture = UISlot.imageDics [idx]; 
 	}
 
 
@@ -232,5 +228,42 @@ public class ImageUIObject : MonoBehaviour {
 		rigidbody.constraints = RigidbodyConstraints.FreezeAll;
 		rigidbody.useGravity = false;
 
+	}
+
+
+	//public create interface
+	private int imageID = 0;
+	public void Init(int imgID) {
+		imageID = imgID;
+	}
+
+	public void Create(Transform parent) {
+		//Create Images
+		Texture2D tex = ImageLoader.GetTexture (imageID);
+		float ratio = tex.width / tex.height;
+		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
+		this.GetComponent<MeshRenderer> ().material.mainTexture = tex;
+		//Set transform
+
+		position.Set (0.0f, 2.0f, 0.0f);
+		rotation.Set (0.0f, 0.0f, 0.0f);
+
+		//Set Parent
+		this.transform.parent = parent;
+
+		this.transform.localPosition = position;
+		this.transform.localEulerAngles = rotation;
+		this.transform.localScale = scale;
+
+	}
+
+	public void Remove() {
+		//Remove Texture for memory
+		Texture2D tex = this.GetComponent<MeshRenderer> ().material.mainTexture as Texture2D;
+		this.GetComponent<MeshRenderer> ().material.mainTexture = null;
+		Destroy(tex);
+
+		//Remove Parent
+		this.transform.parent = null;
 	}
 }

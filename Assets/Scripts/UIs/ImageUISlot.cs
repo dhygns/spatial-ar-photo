@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ImageUISlot : MonoBehaviour {
-	//it would be private image list
-	public Dictionary<string, Texture2D> imageDics = new Dictionary<string, Texture2D>();
 
 	//imageWrapper Objects
 	public ImageUIWrapper[] imageWrapper;
@@ -18,11 +16,6 @@ public class ImageUISlot : MonoBehaviour {
 	UpdateImageWrapper updateImageWrapper;
 
 	void Awake() {
-		imageDics["dummy1"] = Resources.Load ("images/dummy1") as Texture2D;
-		imageDics["dummy2"] = Resources.Load ("images/dummy2") as Texture2D;
-		imageDics["dummy3"] = Resources.Load ("images/dummy3") as Texture2D;
-		imageDics["dummy4"] = Resources.Load ("images/dummy4") as Texture2D;
-		imageDics["dummy5"] = Resources.Load ("images/dummy5") as Texture2D;
 	}
 
 	// Use this for initialization

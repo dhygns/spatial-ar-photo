@@ -116,11 +116,22 @@ extern "C"
         [getPhotoLibViewController GetAllPictures];
     }
 
-    void _GetImageBytes(int idx, intmax_t* ptr)
+    void _GetImageBytes(int idx, intptr_t* ptr)
     {
         UIImage *img = [[getPhotoLibViewController GetImages] objectAtIndex:idx];
-        NSString *byteArray = [UIImagePNGRepresentation(img) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
-        unsigned char * bytes = (unsigned char *)malloc(img.size.width * img.size.height * 4);
+        // NSString *byteArray = [UIImageJPEGRepresentation(img, 1.0) base64EncodedStringWithOptions:NSDataBase64Encoding64CharacterLineLength];
+        
+         char * bytes = (char *)malloc(img.size.width * img.size.height * 4);
+
+        // for(int w = 0; w < img.size.width; w++) {
+        //     for(int h = 0; h < img.size.height; h++) {
+        //         int width = img.size.width;
+        //         (bytes)[(w + h * width) * 4 + 0] = 255;
+        //         (bytes)[(w + h * width) * 4 + 1] = 0;
+        //         (bytes)[(w + h * width) * 4 + 2] = 0;
+        //         (bytes)[(w + h * width) * 4 + 3] = 255;
+        //     }
+        // }
         CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
         CGImageRef imageRef = [img CGImage];
         
@@ -135,7 +146,7 @@ extern "C"
         CGContextDrawImage(bitmap, CGRectMake(0, 0, img.size.width, img.size.height), imageRef);
         CGContextRelease(bitmap);
         CGColorSpaceRelease(colorSpace);
-        (*ptr) = (intmax_t)bytes;
+        (*ptr) = (intptr_t)bytes;
     }
     
     void _GetImageSize(int idx, int *width, int *height) 

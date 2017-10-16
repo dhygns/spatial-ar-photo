@@ -55,19 +55,27 @@ public class ImageUIWrapper : MonoBehaviour {
 		watchChild ();
 	}
 
+
+
 	//Check that ImageObject is in this wrapper
 	void watchChild() {
 		if (this.transform.childCount == 0) {
-			if (ID == 0 || ID == 6) {
-				Instantiate (ImagePrefab, this.transform);
-			} else {
-				RightWrapper.GetChild (0).parent = this.transform;
+			if (ID == 0) {
+				GameObject imageObject = ImageUIObjectsManager.GetLeft (this.transform);
+//				Instantiate (ImagePrefab, this.transform);
+			} else if (ID == 6) {
+				GameObject imageObject = ImageUIObjectsManager.GetRight (this.transform);
+			}else {
+				if(RightWrapper.GetChild (0) != null) RightWrapper.GetChild (0).parent = this.transform;
 			}
-		} else if (this.transform.childCount == 2) {
-			if (ID == 0 || ID == 6) {
-				GameObject.Destroy (this.transform.GetChild (0).gameObject);
-			} else {
-				this.transform.GetChild (0).parent = RightWrapper;
+		} else if (this.transform.childCount > 1) {
+			if (ID == 0) {
+				ImageUIObjectsManager.SetRight (this.transform.GetChild (0).gameObject);
+//				GameObject.Destroy ();
+			} else if (ID == 6) {
+				ImageUIObjectsManager.SetLeft (this.transform.GetChild (0).gameObject);
+			}else {
+				if(this.transform.GetChild (0)) this.transform.GetChild (0).parent = RightWrapper;
 			}
 		}
 	}
@@ -75,11 +83,17 @@ public class ImageUIWrapper : MonoBehaviour {
 	private void watchPosition() {
 		
 		if (rotation.z > maxLimit + eachDistance * 0.5f) {
+			ImageUIObjectsManager.SetLeft (this.transform.GetChild (0).gameObject);
+			GameObject imageObject = ImageUIObjectsManager.GetRight (this.transform);
+
 			rotation.z -= sideLength;
 			rotationTarget.z -= sideLength;
 		}
 
-		if (rotation.z < minLimit - eachDistance * 0.5f) {
+	if (rotation.z < minLimit - eachDistance * 0.5f) {
+			ImageUIObjectsManager.SetRight (this.transform.GetChild (0).gameObject);
+			GameObject imageObject = ImageUIObjectsManager.GetLeft (this.transform);
+
 			rotation.z += sideLength;
 			rotationTarget.z += sideLength;
 		}

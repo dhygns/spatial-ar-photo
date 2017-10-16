@@ -8,7 +8,15 @@ using System;
 using System.Runtime.InteropServices;
 
 public class ImageLoader : MonoBehaviour {
-	public GameObject targetCube;
+
+	//it would be private image list
+	public Dictionary<int, Texture2D> imageDics = new Dictionary<int, Texture2D>();
+
+	static public ImageLoader _instance = null;
+
+	void Awake() {
+		if(_instance == null) _instance = this;
+	}
 
 
 	[DllImport("__Internal")]
@@ -24,7 +32,19 @@ public class ImageLoader : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		#if UNITY_EDITOR
-//		ImagesLoad ("assets-library://asset/asset.jpeg?id=582F0DEA-3355-47C0-BA32-FCBC4F0828A0&ext=jpeg");
+
+		imageDics[0] = Resources.Load ("images/dummy1") as Texture2D;
+		imageDics[1] = Resources.Load ("images/dummy2") as Texture2D;
+		imageDics[2] = Resources.Load ("images/dummy3") as Texture2D;
+		imageDics[3] = Resources.Load ("images/dummy4") as Texture2D;
+		imageDics[4] = Resources.Load ("images/dummy5") as Texture2D;
+		imageDics[5] = Resources.Load ("images/dummy1") as Texture2D;
+		imageDics[6] = Resources.Load ("images/dummy2") as Texture2D;
+		imageDics[7] = Resources.Load ("images/dummy3") as Texture2D;
+		imageDics[8] = Resources.Load ("images/dummy4") as Texture2D;
+		imageDics[9] = Resources.Load ("images/dummy5") as Texture2D;
+		ImagesLoad ("10");
+
 		#elif UNITY_IPHONE
 		_RequestGalleryImage ();
 		#endif
@@ -35,40 +55,39 @@ public class ImageLoader : MonoBehaviour {
 		
 	}
 
-	private Dictionary<string, WWW> fileReq;
-	private Texture2D _tex;
-//	IEnumerator RequestImage(string path) {
-//		fileReq [path] = new WWW ("file://" + path);
-//	}
-//
-//	IEnumerator LoadImageFromPath(string path) {
-//		_tex = new Texture2D (1, 1);
-//
-//		if (File.Exists (path)) {
-//			Debug.Log ("EXIST :: " + path);
-//			yield return StartCoroutine (RequestImage (path));
-//		}
-//	}
+	private int totalImageCount = 0;
 
+	//Get Datas from Native
 	void ImagesLoad(string count) {
-		int cnt = System.Int32.Parse (count);
+		totalImageCount = System.Int32.Parse (count);
+		ImageUIObjectsManager.Setup (totalImageCount);
+	}
+
+	public Texture2D getTexture(int idx) {
+		#if UNITY_EDITOR
+		return imageDics[idx];
+		#elif UNITY_IPHONE 
+		if (totalImageCount == 0)
+		return null;
+
+		idx = idx % totalImageCount;
 
 		int width, height;
-		_GetImageSize (cnt - 1, out width, out height);
+		_GetImageSize (idx, out width, out height);
 
 		IntPtr unmanagedPtr;
-		_GetImageBytes (cnt - 1, out unmanagedPtr);
+		_GetImageBytes (idx, out unmanagedPtr);
 
-		byte[] mangedData = new byte[width * height * 4];
-		Marshal.Copy(unmanagedPtr, mangedData, 0, width * height * 4);
-		//don't forget to free the unmanaged memory
-		Marshal.FreeHGlobal(unmanagedPtr);
+		Texture2D tex = new Texture2D (width, height, TextureFormat.RGBA32, false);
+		tex.LoadRawTextureData(unmanagedPtr, width * height * 4);
+		tex.Apply ();
 
-		Debug.Log ("B" + mangedData.GetLength(0));
-		Debug.Log ("B" + mangedData.Length);
-		Debug.Log ("B" + mangedData.LongLength);
-		Debug.Log ("B" + mangedData.ToString());
+		return tex;
+		#endif
+	}
 
-//		targetCube.GetComponent<Renderer> ().material.mainTexture = file.textureNonReadable;
+	//Interface 
+	static public Texture2D GetTexture(int idx) {
+		return _instance.getTexture (idx);
 	}
 }
