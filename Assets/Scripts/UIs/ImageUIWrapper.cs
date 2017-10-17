@@ -66,7 +66,7 @@ public class ImageUIWrapper : MonoBehaviour {
 			} else if (ID == 6) {
 				GameObject imageObject = ImageUIObjectsManager.GetRight (this.transform);
 			}else {
-				if(RightWrapper.GetChild (0) != null) RightWrapper.GetChild (0).parent = this.transform;
+				if(RightWrapper.childCount != 0) RightWrapper.GetChild (0).parent = this.transform;
 			}
 		} else if (this.transform.childCount > 1) {
 			if (ID == 0) {
@@ -75,7 +75,7 @@ public class ImageUIWrapper : MonoBehaviour {
 			} else if (ID == 6) {
 				ImageUIObjectsManager.SetLeft (this.transform.GetChild (0).gameObject);
 			}else {
-				if(this.transform.GetChild (0)) this.transform.GetChild (0).parent = RightWrapper;
+				if(RightWrapper.childCount != 0) this.transform.GetChild (0).parent = RightWrapper;
 			}
 		}
 	}

@@ -240,7 +240,7 @@ public class ImageUIObject : MonoBehaviour {
 	public void Create(Transform parent) {
 		//Create Images
 		Texture2D tex = ImageLoader.GetTexture (imageID);
-		float ratio = tex.width / tex.height;
+		float ratio = 1.0f;//tex.width / tex.height;
 		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
 		this.GetComponent<MeshRenderer> ().material.mainTexture = tex;
 		//Set transform
@@ -261,7 +261,10 @@ public class ImageUIObject : MonoBehaviour {
 		//Remove Texture for memory
 		Texture2D tex = this.GetComponent<MeshRenderer> ().material.mainTexture as Texture2D;
 		this.GetComponent<MeshRenderer> ().material.mainTexture = null;
+		#if UNITY_EDITOR
+		#elif UNITY_IPHONE
 		Destroy(tex);
+		#endif
 
 		//Remove Parent
 		this.transform.parent = null;
