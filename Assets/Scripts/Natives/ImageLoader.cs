@@ -82,6 +82,7 @@ public class ImageLoader : MonoBehaviour {
 		tex.LoadRawTextureData(unmanagedPtr, width * height * 4);
 		tex.Apply ();
 
+		Marshal.FreeCoTaskMem (unmanagedPtr);
 		return tex;
 		#endif
 	}
