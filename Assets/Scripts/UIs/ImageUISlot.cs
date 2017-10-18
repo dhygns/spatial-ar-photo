@@ -14,8 +14,12 @@ public class ImageUISlot : MonoBehaviour {
 	//Function Delegate For ImageWrapper
 	delegate void UpdateImageWrapper(float dt);
 	UpdateImageWrapper updateImageWrapper;
+		
 
+	static public ImageUISlot instance;
 	void Awake() {
+		if (instance == null)
+			instance = this;
 	}
 
 	// Use this for initialization
@@ -171,5 +175,12 @@ public class ImageUISlot : MonoBehaviour {
 				wrapper = obj.gameObject.transform;
 		}
 		return wrapper;
+	}
+
+	static public Transform GetWrapper(int idx) {
+		if (idx > 6)
+			return null;
+		else 
+			return instance.imageWrapper [idx].transform;
 	}
 }

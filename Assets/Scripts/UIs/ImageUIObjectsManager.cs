@@ -23,10 +23,15 @@ public class ImageUIObjectsManager : MonoBehaviour {
 		
 	}
 	void _createObject(int id) {
+		//Image Load At Wrapper
 		GameObject imageUIObject = Instantiate (ImageUIObjectPrefab, null) as GameObject;
 		ImageUIObject imageUIObjectScript = imageUIObject.GetComponent<ImageUIObject> ();
 		imageUIObjectScript.Init (id);
-		imageObjectList.Add (imageUIObject);
+		if (id < 7) {
+			imageUIObjectScript.Create (ImageUISlot.GetWrapper (id));
+		} else {
+			imageObjectList.Add (imageUIObject);
+		}
 	}
 
 	int RightID {
@@ -40,7 +45,7 @@ public class ImageUIObjectsManager : MonoBehaviour {
 
 	void setup(int cnt) {
 		//Image 6 already loaded via scene
-		for (int i = 7; i < cnt; i++) {
+		for (int i = 0; i < cnt; i++) {
 			_createObject (i);
 		}
 	}
