@@ -39,7 +39,8 @@ public class ImageUIObjectsManager : MonoBehaviour {
 
 
 	void setup(int cnt) {
-		for (int i = 0; i < cnt; i++) {
+		//Image 6 already loaded via scene
+		for (int i = 7; i < cnt; i++) {
 			_createObject (i);
 		}
 	}

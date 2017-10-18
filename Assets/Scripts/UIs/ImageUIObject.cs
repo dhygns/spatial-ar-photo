@@ -40,6 +40,10 @@ public class ImageUIObject : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		Debug.Log ("Created");
+		if (this.transform.parent != null) {
+			Create (this.transform.parent);
+		}
 	}
 
 
@@ -232,7 +236,7 @@ public class ImageUIObject : MonoBehaviour {
 
 
 	//public create interface
-	private int imageID = 0;
+	public int imageID;
 	public void Init(int imgID) {
 		imageID = imgID;
 	}
@@ -262,6 +266,7 @@ public class ImageUIObject : MonoBehaviour {
 		Texture2D tex = this.GetComponent<MeshRenderer> ().material.mainTexture as Texture2D;
 		this.GetComponent<MeshRenderer> ().material.mainTexture = null;
 		#if UNITY_EDITOR
+
 		#elif UNITY_IPHONE
 		Destroy(tex);
 		#endif
