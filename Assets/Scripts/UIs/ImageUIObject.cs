@@ -50,6 +50,7 @@ public class ImageUIObject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(updateMotion != null) updateMotion (Time.deltaTime);
+
 	}
 
 
@@ -101,7 +102,10 @@ public class ImageUIObject : MonoBehaviour {
 			scale.y = 0.19f;
 			scale.z = 0.03f;
 		}
-
+		if (this.transform.localPosition.y < -1.0) {
+			this.Remove ();
+			ImageUIObjectsManager.SetLeft (this.gameObject);
+		}
 		this.transform.localScale += (scale - this.transform.localScale) * dt * 10.0f;
 	}
 
@@ -245,7 +249,7 @@ public class ImageUIObject : MonoBehaviour {
 		//Create Images
 		Texture2D tex = ImageLoader.GetTexture (imageID);
 		float ratio = 1.0f;//tex.width / tex.height;
-		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, -1.0f);
+		this.GetComponent<MeshRenderer> ().material.mainTextureScale = new Vector2 (1.0f * ratio, 1.0f);
 		this.GetComponent<MeshRenderer> ().material.mainTexture = tex;
 		//Set transform
 

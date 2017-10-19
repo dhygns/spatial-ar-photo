@@ -83,15 +83,17 @@ public class ImageUIWrapper : MonoBehaviour {
 	private void watchPosition() {
 		
 		if (rotation.z > maxLimit + eachDistance * 0.5f) {
-			ImageUIObjectsManager.SetLeft (this.transform.GetChild (0).gameObject);
+			GameObject go = this.transform.childCount == 0 ? null : this.transform.GetChild (0).gameObject;
+			ImageUIObjectsManager.SetLeft (go);
 			GameObject imageObject = ImageUIObjectsManager.GetRight (this.transform);
 
 			rotation.z -= sideLength;
 			rotationTarget.z -= sideLength;
 		}
 
-	if (rotation.z < minLimit - eachDistance * 0.5f) {
-			ImageUIObjectsManager.SetRight (this.transform.GetChild (0).gameObject);
+		if (rotation.z < minLimit - eachDistance * 0.5f) {
+			GameObject go = this.transform.childCount == 0 ? null : this.transform.GetChild (0).gameObject;
+			ImageUIObjectsManager.SetRight (go);
 			GameObject imageObject = ImageUIObjectsManager.GetLeft (this.transform);
 
 			rotation.z += sideLength;

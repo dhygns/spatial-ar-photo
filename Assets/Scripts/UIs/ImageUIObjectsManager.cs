@@ -51,7 +51,7 @@ public class ImageUIObjectsManager : MonoBehaviour {
 	}
 
 	GameObject getObject(int id, Transform parent) {
-		if (imageObjectList.Count > id) {
+		if (imageObjectList.Count > id && id != -1) {
 			GameObject imageObject = imageObjectList.ToArray () [id];
 			imageObjectList.Remove (imageObject);
 
