@@ -170,6 +170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ImageUIObjectPrefab: {fileID: 1133438973845290, guid: 05e517bfc7cb14f418d08fe6e49afa75,
     type: 2}
+  debugTarget: {fileID: 1701756171}
 --- !u!114 &50159468
 MonoBehaviour:
   m_ObjectHideFlags: 0

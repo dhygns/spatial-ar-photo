@@ -206,8 +206,36 @@ public class ImageUIObject : MonoBehaviour {
 		this.transform.position = Camera.main.ScreenToWorldPoint (touch);
 
 		enableRigidBody ();
+
+        Texture2D tex = this.GetComponent<MeshRenderer>().material.mainTexture as Texture2D;
+        byte[] pixels = tex.EncodeToPNG();
+        StartCoroutine(sendTexture(pixels, tex.width, tex.height));
 	}
 		
+    //temp send texture
+    IEnumerator sendTexture(byte[] pixels, int width, int height) {//Temp 
+        int pixelSize = pixels.Length;
+
+        for (int step = 0; step < pixels.Length / 1024; step++)
+        {
+            CoSpatialProtocol.GetImage msg = new CoSpatialProtocol.GetImage();
+
+            msg.width = width;
+            msg.height = height;
+            msg.maxstep = (int)Mathf.Ceil(pixels.Length / 1024);
+            msg.step = step;
+
+            int len = Mathf.Min(pixelSize, 1024);
+            msg.pixels = new byte[len];
+            for (int i = 0; i < len; i++)
+            {
+                msg.pixels[i] = pixels[step * 1024 + i];
+            }
+            CoSpatial.Network.Send(CoSpatialProtocol.Type.GetImage, msg);
+            yield return null;
+            pixelSize -= 1024;
+        }
+    }
 
 	//Enable Rigidbody
 	private void enableRigidBody() {

@@ -89,4 +89,13 @@ public class ImageUIObjectsManager : MonoBehaviour {
 	static public void SetLeft(GameObject imageObject) {
 		instance.setObject (imageObject, instance.LeftID);
 	}
+
+
+
+    //For Debug.
+    public GameObject debugTarget;
+    static public void SetTexture(Texture2D tex) {
+        Debug.Log("Texture Setup to Debug object");
+        instance.debugTarget.GetComponent<MeshRenderer>().material.mainTexture = tex;
+    }
 }

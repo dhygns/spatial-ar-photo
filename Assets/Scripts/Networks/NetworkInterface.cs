@@ -75,6 +75,8 @@ public class NetworkInterface : MonoBehaviour
     //delegate function for ui callback
     private delegate void CallBack();
 
+
+
     //intialized ui interface
     private void Awake()
     {
@@ -115,7 +117,7 @@ public class NetworkInterface : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -124,18 +126,25 @@ public class NetworkInterface : MonoBehaviour
 
     }
 
-
+    //if you click Server Button, it would be run.
     private void onServerButton()
     {
         Debug.Log("Clicked Server Button");
         TextBoxUIFlag = true;
-        CoSpatialServer.Create();
-        IPAddressOutput.Text = CoSpatialServer.GetIP();
+        CoSpatial.CreateServer();
+        IPAddressOutput.Text = CoSpatial.Network.IP;
+
+        CoSpatial.Network.RegisterHandler(CoSpatialProtocol.Type.Connected, (netMsg) => {
+            Debug.Log("Client Connected And Remove IP Address Box");
+            this.TextBoxUIFlag = false;
+        });
     }
+
+    //if you click Client Button, it would be run.
     private void onClientButton()
     {
         Debug.Log("Clicked Client Button");
-        CoSpatialClient.Connect(IPAddressInput.Text);
+        CoSpatial.CreateClient(IPAddressInput.Text);
     }
 
     private void OnGUI()
